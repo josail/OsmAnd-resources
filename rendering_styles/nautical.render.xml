@@ -1574,7 +1574,7 @@
 					<apply textWrapWidth="19"/>
 					<apply_if engine_v1="false" textDy="-10"/> <!-- avoid large distance of nameTags due to light shield -->
 					<apply_if engine_v1="true" textDy="-8"/> <!-- avoid large distance of nameTags due to light shield -->
-					<apply_if engine_v1="false" additional="seamark:light:colour" textDy="-16"/> <!-- avoid large distance of nameTags due to light shield -->
+					<apply_if engine_v1="false" additional="seamark:light:colour" textDy="-13"/> <!-- avoid large distance of nameTags due to light shield -->
 					<apply_if engine_v1="true" additional="seamark:light:colour" textDy="0"/> <!-- avoid large distance of nameTags due to light shield -->
 					<!-- INT-1 P Section: Lights, lightDetail nameTag2 composed in rendering_types.xml -->
 					<apply_if lightDetail="sectors" nameTag2="seamark:light:add_sectors"/>
@@ -1615,7 +1615,7 @@
 						<apply_if lightDetail="small" textSize="9" textColor="#bf0400ab"/> <!-- small and translucent dark blue for reduced visual impact -->
 						<apply_if lightDetail="name_only" nameTag2="$null"/>
 						<apply_if lightDetail="omit" disable="true"/>
-						<apply_if engine_v1="false" textDy="-10"/>
+						<apply_if engine_v1="false" textDy="-13"/>
 					</switch>
 					<case minzoom="12" tag="seamark:type" value="fog_signal" textOrder="70"/>
 					<case minzoom="12" tag="seamark:type" value="radar_transponder" textOrder="71"/> <!-- INT-1 S Section Radar, Ramark, Racon -->
@@ -1629,28 +1629,28 @@
 					<case minzoom="17" tag="seamark:type" value="signal_station_warning" nameTag="seamark:signal_station_warning:category_name" textOrder="71"/>
 <!--					<apply_if engine_v1="true" textDy="19"/>-->
 <!--					<apply_if engine_v1="false" textDy="0"/>-->
-					<apply_if engine_v1="false" additional="seamark:light:colour" textDy="-28"/> <!-- avoid very large distance of nameTags due to major/minor_light shields -->
-					<apply_if additional="seamark:light:1:colour" textDy="-28"/> <!-- avoid very large distance of nameTags due to major/minor_light shields -->
+					<apply_if engine_v1="false" additional="seamark:light:colour" textDy="-13"/> <!-- avoid very large distance of nameTags due to major/minor_light shields -->
+					<apply_if additional="seamark:light:1:colour" textDy="-13"/> <!-- avoid very large distance of nameTags due to major/minor_light shields -->
 					<apply_if minzoom="11" maxzoom="13" tag="seamark:type" value="platform" textDy="-10"/>
 					<apply_if minzoom="11" maxzoom="13" tag="man_made" value="offshore_platform" textDy="-10"/>
-					<apply_if minzoom="11" maxzoom="11" tag="man_made" value="lighthouse" additional="seamark:light:colour" textDy="-14"/>
-					<apply_if minzoom="11" maxzoom="11" tag="man_made" value="lighthouse" additional="seamark:light:1:colour" textDy="-14"/>
-					<apply_if minzoom="11" tag="seamark:type:landmark:category" value="tower" additional="seamark:light:colour" textDy="-14"/>
-					<apply_if minzoom="11" tag="seamark:type:landmark:category" value="tower" additional="seamark:light:1:colour" textDy="-14"/>
-					<apply_if minzoom="11" tag="seamark:type" value="landmark" additional="seamark:light:colour" textDy="-14"/>
-					<apply_if minzoom="11" tag="seamark:type" value="landmark" additional="seamark:light:1:colour" textDy="-14"/>
+					<apply_if minzoom="11" maxzoom="11" tag="man_made" value="lighthouse" additional="seamark:light:colour" textDy="-13"/>
+					<apply_if minzoom="11" maxzoom="11" tag="man_made" value="lighthouse" additional="seamark:light:1:colour" textDy="-13"/>
+					<apply_if minzoom="11" tag="seamark:type:landmark:category" value="tower" additional="seamark:light:colour" textDy="-13"/>
+					<apply_if minzoom="11" tag="seamark:type:landmark:category" value="tower" additional="seamark:light:1:colour" textDy="-13"/>
+					<apply_if minzoom="11" tag="seamark:type" value="landmark" additional="seamark:light:colour" textDy="-13"/>
+					<apply_if minzoom="11" tag="seamark:type" value="landmark" additional="seamark:light:1:colour" textDy="-13"/>
 					<apply textWrapWidth="25"/>
 				</switch>
 				
 				<!-- INT-1 J Section: Nature of the Seabed -->
 				<!-- INT-1 J1 to J12 Types of Seabed, OsmAnd nautical.render.xml renderingProperty options for seabedDetail nameTag: ""(default)=""= 1st surface type as letters according to INT-1 J1-J13, seabed_letters are generated in obf according to rendering_types.xml, nameTag2: "category"=surface tag in seamark_category, "all"=surface qualification and type included in seabed_surface_all, seagrass and weed in seabed_taxon_all including category, genus and taxon, "omit"=no display -->
 				<!-- Tested 2022-05-30 together with version 1.1 of rendering_types.xml, e.g.  http://osmand.net/go.html?lat=36.65161&lon=25.37019&z=16, feedback welcome: josail @ gmx.de -->
-				<switch minzoom="16" textWrapWidth="20" textOrder="14" textDy="10" textColor="#0400ab" textItalic="true" textHaloColor="$waterwayColor" textHaloRadius="2">
+				<switch minzoom="16" textWrapWidth="20" textOrder="14" textDy="-13" textColor="#0400ab" textItalic="true" textHaloColor="$waterwayColor" textHaloRadius="2">
 					<!-- seabedDetail="default" or "simple" display with letters only -->
 					<switch seabedDetail="">
 						<case tag="seamark:type" value="seabed_area" nameTag="seabed_surface_1"/>
-						<case tag="seamark:type" value="weed" nameTag="seabed_letters" textDy="-15" />
-						<case tag="seamark:type" value="seagrass" nameTag="seabed_letters" textDy="-15" />
+						<case tag="seamark:type" value="weed" nameTag="seabed_letters" textDy="-13" />
+						<case tag="seamark:type" value="seagrass" nameTag="seabed_letters" textDy="-13" />
 					</switch>
 					<!-- additional seabedDetail of seamark "category" or "all" surface type and qualification tags as nameTag2-->
 					<switch seabedDetail="category">
