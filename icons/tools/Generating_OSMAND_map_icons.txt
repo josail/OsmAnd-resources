@@ -21,7 +21,7 @@ Some instruction for generating new OSMAND map icons from .svg files with the Os
 7. in case the target filenames already exists, you need to delete the existing .png files manually in all four target folders (because overwriting of existing .png files is prevented in sortfiles.sh)
    \rendering_styles\style-icons\map-icons-png\...\target_name_in_app_render_xml.png
    
-8. rund sortfiles.sh in git bash (install bash beforehand, if not already available)
+8. run sortfiles.sh in git bash (install bash beforehand, if not already available)
 
 9. if available, the following files are copied to \rendering_styles\style-icons\... folders
    four different scales of png files in corresponding subfolder from \icons\png\...\source_folder_name_file_name.png  to \rendering_styles\style-icons\map-icons-png\...\mm_target_name_in_app_render_xml.png
