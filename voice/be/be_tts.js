@@ -121,7 +121,6 @@ function populateDictionary(tts) {
 	
 	dictionary["futau"] = tts ? "футаў" : "futau.ogg";
 	dictionary["around_1_mile"] = tts ? "недзе адну мілю" : "around_1_mile.ogg";
-	dictionary["1_tenth_of_a_mile"] = tts ? "каля адной дзясятай мілі" : "1_tenth_of_a_mile.ogg";
 	dictionary["tenths_of_a_mile"] = tts ? "дзясятых мілі" : "tenths_of_a_mile.ogg";
 	dictionary["milu"] = tts ? "мілю" : "milu.ogg";
 	dictionary["mili"] = tts ? "мілі" : "mili.ogg";
@@ -157,7 +156,7 @@ function route_new_calc(dist, timeVal) {
 }
 
 function plural_km(dist) {
-	if (distance % 10 == 1 && (dist % 100 > 20 || dist % 100 < 10)) {
+	if (dist % 10 == 1 && (dist % 100 > 20 || dist % 100 < 10)) {
 		return dictionary["kilometar"];
 	} else if (dist % 10 < 5 && dist % 10 > 1 && (dist % 100 > 20 || dist % 100 < 10 )) {
 		return dictionary["kilametry"];
@@ -167,7 +166,7 @@ function plural_km(dist) {
 }
 
 function plural_mi(dist) {
-	if (distance % 10 == 1 && (dist % 100 > 20 || dist % 100 < 10)) {
+	if (dist % 10 == 1 && (dist % 100 > 20 || dist % 100 < 10)) {
 		return dictionary["milu"];
 	} else if (dist % 10 < 5 && dist % 10 > 1 && (dist % 100 > 20 || dist % 100 < 10 )) {
 		return dictionary["mili"];
@@ -194,11 +193,11 @@ function distance(dist) {
 			}
 			break;
 		case "mi-f":
-			if (dist < 160) {
+			if (dist < 91) {
 				return (tts ? (Math.round(2*dist/100.0/0.3048)*50).toString() : ogg_dist(Math.round(2*dist/100.0/0.3048)*50)) + " " + dictionary["futau"];
-			} else if (dist < 241) {
-				return dictionary["1_tenth_of_a_mile"];
-			} else if (dist < 1529) {
+			} else if (dist < 320) {
+				return (tts ? (Math.round(dist/100.0/0.3048)*100).toString() : ogg_dist(Math.round(dist/100.0/0.3048)*100)) + " " + dictionary["futau"];
+			} else if (dist < 1367) {
 				return (tts ? Math.round(dist/161.0).toString() : ogg_dist(Math.round(dist/161.0))) + " " + dictionary["tenths_of_a_mile"];
 			} else if (dist < 2414) {
 				return dictionary["around_1_mile"];

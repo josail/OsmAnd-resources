@@ -1,0 +1,354 @@
+<renderingStyle name="us-maps" addon="yes" depends="" defaultColor="#ebe7e4" version="1">
+
+	<renderingProperty attr="appMode" name="Rendering mode" description="Map optimization for respective User Profile"
+		type="string" possibleValues="browse map,car,bicycle,pedestrian"/>
+	<renderingProperty attr="baseAppMode" name="Default Rendering mode" description="Map optimization for respective User Profile based on base (parent) profile"
+		type="string" possibleValues="default,car,bicycle,pedestrian,public_transport,boat,ski"/>
+-	<renderingProperty attr="hideNFSdata" name="Hide NFS trails, roads, recreation POIs" description="Hide NFS trails, roads, recreation POIs"
+		type="boolean" possibleValues="" category="hide"/>
+	<renderingProperty attr="hideBLMdata" name="Hide BLM trails, roads, recreation POIs" description="Hide BLM trails, roads, recreation POIs"
+		type="boolean" possibleValues="" category="hide"/>
+	<renderingProperty attr="hideNPSdata" name="Hide NPS trails, roads, recreation POIs" description="Hide NPS trails, roads, recreation POIs"
+		type="boolean" possibleValues="" category="hide"/>
+
+	<renderingAttribute name="defaultColor">
+		<case noPolygons="true" attrColorValue="#00ebe7e4"/>
+		<case attrColorValue="#ebe7e4">
+			<apply_if nightMode="true" attrColorValue="#121926"/>
+		</case>
+	</renderingAttribute>
+
+	<renderingAttribute name="blm_public_motorized_roads_color">
+		<case nightMode="true" attrColorValue="#dddddd"/>
+		<case attrColorValue="#000000"/>
+	</renderingAttribute>
+	<renderingAttribute name="blm_limited_public_motorized_roads">
+		<case nightMode="true" attrColorValue="#EB674A"/>
+		<case attrColorValue="#B33114"/>
+	</renderingAttribute>
+	
+	<renderingAttribute name="blm_public_motorized_trails">
+		<case nightMode="true" attrColorValue="#FFA794"/>
+		<case attrColorValue="#E74927"/>
+	</renderingAttribute>
+	<renderingAttribute name="blm_limited_public_motorized_trails">
+		<case nightMode="true" attrColorValue="#FFA794"/>
+		<case attrColorValue="#E74927"/>
+	</renderingAttribute>
+	<renderingAttribute name="blm_public_nonmotorized_trails">
+		<case nightMode="true" attrColorValue="#E684FF"/>
+		<case attrColorValue="#CC00FF"/>
+	</renderingAttribute>
+	<renderingAttribute name="blm_public_nonmechanized_trails">
+		<case nightMode="true" attrColorValue="#E684FF"/>
+		<case attrColorValue="#CC00FF"/>
+	</renderingAttribute>
+	<renderingAttribute name="blm_public_not_assessed_trails">
+		<case nightMode="true" attrColorValue="#90B1FF"/>
+		<case attrColorValue="#0040D8"/>
+	</renderingAttribute>
+
+	<renderingConstant name="null" value="#00000000"/>
+
+	<renderingProperty attr="engine_v1" type="boolean"/>
+
+	<order>
+		<switch area="false" point="true" objectType="1" order="128">
+			<case tag="us_maps" value="recreation_area">
+				<apply_if hideNFSdata="true" additional="nfs=yes" order="-1"/>
+				<apply_if hideBLMdata="true" additional="blm=yes" order="-1"/>
+				<apply_if hideNPSdata="true" additional="nps=yes" order="-1"/>
+			</case>
+		</switch>
+
+		<switch area="false" objectType="2" order="80">
+			<case tag="us_maps" value="trail" order="121">
+				<apply_if additional="us_maps_accessibility_status=proposed" order="-1"/>
+			</case>
+			<case tag="us_maps" value="road" order="120">
+				<apply_if additional="us_maps_road_accessibility_status=no_access" maxzoom="13" order="-1"/>
+				<apply_if additional="us_maps_road_accessibility_status=admin" maxzoom="13" order="-1"/>
+			</case>
+			<apply_if hideNFSdata="true" additional="nfs=yes" order="-1"/>
+			<apply_if hideBLMdata="true" additional="blm=yes" order="-1"/>
+			<apply_if hideNPSdata="true" additional="nps=yes" order="-1"/>
+		</switch>
+	</order>
+
+	<text>
+		<switch minzoom="12" textColor="#C50028" textHaloColor="#aaffffff" textHaloRadius="2" textOnPath="true" textBold="true" textWrapWidth="27" textOrder="121">
+			<case maxzoom="12" tag="us_maps" value="trail" nameTag="us_maps_trail_number"/>
+			<case maxzoom="12" tag="us_maps" value="road" nameTag="us_maps_road_id"/>
+			<case minzoom="13" tag="us_maps" value="trail" nameTag="" nameTag2="us_maps_trail_number"/>
+			<case minzoom="13" tag="us_maps" value="road" nameTag="" nameTag2="us_maps_road_id"/>
+			<apply_if additional="blm=yes" textColor="#956800"/>
+			<apply_if maxzoom="13" textSize="11"/>
+			<apply_if minzoom="14" maxzoom="15" textSize="12"/>
+			<apply_if minzoom="16" textSize="13"/>
+			<apply_if maxzoom="14" additional="us_maps_road_accessibility_status=no_access" disable="true"/>
+			<apply_if maxzoom="14" additional="us_maps_road_accessibility_status=admin" disable="true"/>
+		</switch>
+		<case minzoom="14" tag="us_maps" value="recreation_area" nameTag="" textHaloRadius="1" textHaloColor="#aaffffff" textColor="#8E2E2E" textDy="5" textPlacement="bottom|top">
+			<apply_if maxzoom="15" textSize="12"/>
+			<apply_if minzoom="16" textSize="13"/>
+			<apply_if engine_v1="false" textWrapWidth="30"/>
+			<apply_if nightMode="true" textColor="#FDE3E3" textHaloColor="#44000000"/>
+		</case>
+	</text>
+
+	<point>
+		<case minzoom="11" tag="us_maps" value="recreation_area" additional="nfs=yes" iconOrder="40">
+			<switch>
+				<case additional="us_maps_recreation_area_marker_activity=backpacking" icon="special_trekking"/>
+				<case additional="us_maps_recreation_area_marker_activity=beachcombing" icon="osmc_white_shell"/>
+				<case additional="us_maps_recreation_area_marker_activity=big_game_hunting" icon="sport_shooting"/>
+				<case additional="us_maps_recreation_area_marker_activity=birdwatching" icon="birdwatching"/>
+				<case additional="us_maps_recreation_area_marker_activity=boating_motorized" icon="special_sail_boat"/>
+				<case additional="us_maps_recreation_area_marker_activity=boating_non_motorized" icon="special_kayak"/>
+				<case additional="us_maps_recreation_area_marker_activity=cabin_rentals" icon="cabin_rentals"/>
+				<case additional="us_maps_recreation_area_marker_activity=campground_camping" icon="tourism_camp_site"/>
+				<case additional="us_maps_recreation_area_marker_activity=cave" icon="natural_cave_entrance"/>
+				<case additional="us_maps_recreation_area_marker_activity=day_hiking" icon="osmc_white_hiker"/>
+				<case additional="us_maps_recreation_area_marker_activity=disc_golf" icon="sport_disc_golf"/>
+				<case additional="us_maps_recreation_area_marker_activity=dispersed_camping" icon="dispersed_camping"/>
+				<case additional="us_maps_recreation_area_marker_activity=dog_sledding" icon="dog_sledding"/>
+				<case additional="us_maps_recreation_area_marker_activity=estuary_fishing" icon="shop_fishing"/>
+				<case additional="us_maps_recreation_area_marker_activity=forest_service_shield" icon="nfs_default_icon"/>
+				<case additional="us_maps_recreation_area_marker_activity=game_birds_waterfowl" icon="sport_shooting"/>
+				<case additional="us_maps_recreation_area_marker_activity=gold_panning" icon="gold_panning"/>
+				<case additional="us_maps_recreation_area_marker_activity=group_camping" icon="group_camping"/>
+				<case additional="us_maps_recreation_area_marker_activity=group_picnicking" icon="group_picnicking"/>
+				<case additional="us_maps_recreation_area_marker_activity=hang_gliding" icon="hang_gliding"/>
+				<case additional="us_maps_recreation_area_marker_activity=horse_camping" icon="horse_camping"/>
+				<case additional="us_maps_recreation_area_marker_activity=horse_riding" icon="horse_riding"/>
+				<case additional="us_maps_recreation_area_marker_activity=intermediate_parent_group" icon="rest_area"/>
+				<case additional="us_maps_recreation_area_marker_activity=interpretive_areas" icon="interpretive_areas"/>
+				<case additional="us_maps_recreation_area_marker_activity=lake_and_pond_fishing" icon="shop_fishing"/>
+				<case additional="us_maps_recreation_area_marker_activity=mountain_biking" icon="mountain_biking"/>
+				<case additional="us_maps_recreation_area_marker_activity=mountain_climbing" icon="sport_climbing"/>
+				<case additional="us_maps_recreation_area_marker_activity=ohv_camping" icon="ohv_camping"/>
+				<case additional="us_maps_recreation_area_marker_activity=ohv_open_area_riding" icon="special_utv"/>
+				<case additional="us_maps_recreation_area_marker_activity=ohv_road_riding" icon="special_utv"/>
+				<case additional="us_maps_recreation_area_marker_activity=ohv_trail_riding" icon="special_utv"/>
+				<case additional="us_maps_recreation_area_marker_activity=picnicking" icon="picnicking"/>
+				<case additional="us_maps_recreation_area_marker_activity=river_and_stream_fishing" icon="shop_fishing"/>
+				<case additional="us_maps_recreation_area_marker_activity=road_cycling" icon="special_bicycle"/>
+				<case additional="us_maps_recreation_area_marker_activity=rock_climbing" icon="sport_climbing_adventure"/>
+				<case additional="us_maps_recreation_area_marker_activity=rockhounding" icon="rockhounding"/>
+				<case additional="us_maps_recreation_area_marker_activity=rv_camping" icon="special_camper"/>
+				<case additional="us_maps_recreation_area_marker_activity=salt_water_fishing" icon="shop_fishing"/>
+				<case additional="us_maps_recreation_area_marker_activity=sand_play" icon="beach"/>
+				<case additional="us_maps_recreation_area_marker_activity=scenic_driving" icon="shop_car"/>
+				<case additional="us_maps_recreation_area_marker_activity=scuba_diving" icon="sport_scuba_diving"/>
+				<case additional="us_maps_recreation_area_marker_activity=sledding_tubing" icon="sledding_tubing"/>
+				<case additional="us_maps_recreation_area_marker_activity=small_game_hunting" icon="sport_shooting"/>
+				<case additional="us_maps_recreation_area_marker_activity=swimming" icon="swimming_pool"/>
+				<case additional="us_maps_recreation_area_marker_activity=target_shooting" icon="target_shooting"/>
+				<case additional="us_maps_recreation_area_marker_activity=tidepooling" icon="tidepooling"/>
+				<case additional="us_maps_recreation_area_marker_activity=trailhead" icon="trailhead"/>
+				<case additional="us_maps_recreation_area_marker_activity=trapping" icon="target_shooting"/>
+				<case additional="us_maps_recreation_area_marker_activity=viewing_plants" icon="viewing_plants"/>
+				<case additional="us_maps_recreation_area_marker_activity=viewing_scenery" icon="special_photo_camera"/>
+				<case additional="us_maps_recreation_area_marker_activity=viewing_wildlife" icon="viewing_wildlife"/>
+				<case additional="us_maps_recreation_area_marker_activity=visitor_centers" icon="estate_agent"/>
+				<case additional="us_maps_recreation_area_marker_activity=visitor_programs" icon="visitor_programs"/>
+				<apply shield="osmc_brown_bg"/>
+			</switch>
+			<switch>
+				<case additional="us_maps_recreation_area_marker_activity=ice_fishing" icon="shop_fishing"/>
+				<case additional="us_maps_recreation_area_marker_activity=ice_skating" icon="ice_skating"/>
+				<case additional="us_maps_recreation_area_marker_activity=skiing_snowboarding" icon="special_skiing"/>
+				<case additional="us_maps_recreation_area_marker_activity=snowmobiling" icon="special_snowmobile"/>
+				<case additional="us_maps_recreation_area_marker_activity=tubing" icon="tubing"/>
+				<case additional="us_maps_recreation_area_marker_activity=xc_skiing_snowshoeing" icon="special_ski_touring"/>
+				<apply shield="osmc_blue_bg"/>
+			</switch>
+			<case icon="nfs_default_icon" shield="osmc_brown_bg"/>
+			<apply_if additional="us_maps_recreation_area_open_status=open" icon_2="nfs_access_overlay_open"/>
+			<apply_if additional="us_maps_recreation_area_open_status=closed" icon_2="nfs_access_overlay_closed"/>
+			<apply_if additional="us_maps_recreation_area_open_status=temporarily_closed" icon_2="nfs_access_overlay_temporarily_closed"/>
+			<apply_if additional="us_maps_recreation_area_open_status=unreachable" icon_2="nfs_access_overlay_unreachable"/>
+		</case>
+		<case minzoom="11" tag="us_maps" value="recreation_area" additional="blm=yes" iconOrder="40">
+			<switch>
+				<case additional="us_maps_recreation_area_activity_campground_camping=yes" icon="tourism_camp_site">
+					<apply_if additional="impromptu=yes" icon="dispersed_camping"/>
+				</case>
+				<case additional="us_maps_recreation_area_facility_cabin=yes" icon="cabin"/>
+				<case additional="us_maps_recreation_area_facility_warming_hut=yes" icon="furnace"/>
+				<apply shield="osmc_red_bg"/>
+			</switch>
+			<switch>
+				<case additional="us_maps_recreation_area_activity_trailhead=yes" icon="trailhead" iconOrder="39"/>
+				<case additional="us_maps_recreation_area_facility_group_shelter=yes" icon="amenity_shelter"/>
+				<case additional="us_maps_recreation_area_activity_ohv_open_area_riding=yes" icon="special_utv"/>
+				<case additional="us_maps_recreation_area_activity_rock_climbing=yes" icon="sport_climbing_adventure"/>
+				<case additional="us_maps_recreation_area_activity_rockhounding=yes" icon="rockhounding"/>
+				<apply shield="osmc_brown_bg"/>
+			</switch>
+			<switch>
+				<case additional="us_maps_recreation_area_activity_interpretive_areas=yes" icon="interpretive_areas"/>
+				<case additional="us_maps_recreation_area_activity_picnicking=yes" icon="picnicking"/>
+				<case additional="us_maps_recreation_area_activity_day_use_site=yes" icon="rest_area"/>
+				<case additional="us_maps_recreation_area_facility_natural_endangered_area=yes" icon="natural_endangered_area"/>
+				<case additional="us_maps_recreation_area_activity_poi=yes" icon="point_of_interest"/>
+				<case additional="us_maps_recreation_area_activity_scenic_overlook=yes" icon="tourism_viewpoint"/>
+				<apply shield="osmc_green_bg"/>
+			</switch>
+			<switch>
+				<case minzoom="12" additional="drinking_water=yes" icon="amenity_drinking_water" iconOrder="41"/>
+				<apply shield="osmc_teal_bg"/>
+			</switch>
+			<switch>
+				<case additional="us_maps_recreation_area_facility_boat_ramp=yes" icon="leisure_slipway"/>
+				<case additional="us_maps_recreation_area_facility_boat_takeout=yes" icon="leisure_slipway"/>
+				<case additional="us_maps_recreation_area_facility_boat_launch=yes" icon="leisure_slipway"/>
+				<case minzoom="13" additional="us_maps_recreation_area_facility_rapid=yes" icon="rapid_white"/>
+				<apply shield="osmc_blue_bg"/>
+			</switch>
+			<switch>
+				<case additional="us_maps_recreation_area_facility_ranger_station_office=yes" icon="ranger_station_office"/>
+				<case additional="us_maps_recreation_area_activity_visitor_centers=yes" icon="estate_agent"/>
+				<case additional="us_maps_recreation_area_facility_parking=yes" icon="parking"/>
+				<case additional="us_maps_recreation_area_facility_lighthouse=yes" icon="man_made_lighthouse"/>
+				<case additional="us_maps_recreation_area_facility_airplane_landing_strip=yes" icon="aeroway_aerodrome"/>
+				<case minzoom="13" additional="us_maps_recreation_area_facility_fire_lookout=yes" icon="fire_lookout" iconOrder="41"/>
+				<case additional="us_maps_recreation_area_facility_rv_dump_station=yes" icon="sanitary_dump_station_white"/>
+				<case minzoom="13" additional="toilets=yes" icon="amenity_toilets" iconOrder="41"/>
+				<case minzoom="13" additional="us_maps_recreation_area_facility_kiosk=yes" icon="shop_kiosk" iconOrder="42"/>
+				<apply shield="osmc_black_bg"/>
+			</switch>
+		</case>
+	</point>
+
+	<polygon>
+	</polygon>
+
+	<line>
+		<switch>
+			<case minzoom="11" tag="us_maps" value="trail" additional="nfs=yes" color__2="#ffffff"/>
+			<case minzoom="11" tag="us_maps" value="trail" additional="nps=yes" color__2="#ffffff"/>
+			<apply>
+				<switch>
+					<case additional="us_maps_terra_base_symbology=tc4-5" color="#000000"/>
+					<apply_if maxzoom="11" strokeWidth="1.5" strokeWidth__2="3" pathEffect="3_3"/>
+					<apply_if minzoom="12" maxzoom="12" strokeWidth="2" strokeWidth__2="4" pathEffect="4_4"/>
+					<apply_if minzoom="13" maxzoom="17" strokeWidth="3" strokeWidth__2="7" pathEffect="5_5"/>
+					<apply_if minzoom="18" strokeWidth="4" strokeWidth__2="10" pathEffect="6_6"/>
+				</switch>
+				<switch>
+					<case additional="us_maps_terra_base_symbology=tc3" color="#000000">
+						<apply_if maxzoom="11" pathEffect="3_3"/>
+						<apply_if minzoom="12" maxzoom="12" pathEffect="4_4"/>
+						<apply_if minzoom="13" maxzoom="17" pathEffect="5_5"/>
+						<apply_if minzoom="18" pathEffect="6_6"/>
+					</case>
+					<case additional="us_maps_terra_base_symbology=tc1-2" color="#000000">
+						<apply_if maxzoom="11" pathEffect="1_1"/>
+						<apply_if minzoom="12" maxzoom="12" pathEffect="2_2"/>
+						<apply_if minzoom="13" maxzoom="17" pathEffect="2_2"/>
+						<apply_if minzoom="18" pathEffect="3_3"/>
+					</case>
+					<apply_if maxzoom="11" strokeWidth="1.5" strokeWidth__2="2.8"/>
+					<apply_if minzoom="12" maxzoom="12" strokeWidth="1.5" strokeWidth__2="3"/>
+					<apply_if minzoom="13" maxzoom="17" strokeWidth="2" strokeWidth__2="5"/>
+					<apply_if minzoom="18" strokeWidth="3" strokeWidth__2="7"/>
+				</switch>
+				<case color="#000000">
+					<apply_if maxzoom="11" strokeWidth="1.5" strokeWidth__2="2.8" pathEffect="1_1"/>
+					<apply_if minzoom="12" maxzoom="12" strokeWidth="1.5" strokeWidth__2="3" pathEffect="2_2"/>
+					<apply_if minzoom="13" maxzoom="17" strokeWidth="2" strokeWidth__2="5" pathEffect="2_2"/>
+					<apply_if minzoom="18" strokeWidth="3" strokeWidth__2="7" pathEffect="3_3"/>
+				</case>
+				<apply_if additional="us_maps_national_trail_designation=3" color="#C50028"/>
+				<apply_if additional="us_maps_accessibility_status=temporarily_closed" color="#aaaaaa"/>
+				<apply_if nightMode="true" color__2="#aaaaaa"/>
+			</apply>
+		</switch>
+		<switch minzoom="11" tag="us_maps" value="road" additional="nfs=yes" color__2="#333333" cap="ROUND">
+			<case additional="us_maps_road_symbol_name=paved_road" color="#A2A2A2"/>
+			<case additional="us_maps_road_symbol_name=gravel_road_suitable_for_passenger_car" color="#929292" color__1="#cccccc" cap="BUTT">
+				<apply_if maxzoom="11" strokeWidth__1="1.5" pathEffect="5_4"/>
+				<apply_if minzoom="12" maxzoom="12" strokeWidth__1="2" pathEffect="7_6"/>
+				<apply_if minzoom="13" maxzoom="13" strokeWidth__1="4" pathEffect="10_8"/>
+				<apply_if minzoom="14" maxzoom="17" strokeWidth__1="5" pathEffect="12_10"/>
+				<apply_if minzoom="18" strokeWidth__1="7" pathEffect="16_7"/>
+			</case>
+			<case additional="us_maps_road_symbol_name=dirt_road_suitable_for_passenger_car" color="#ffffff">
+				<apply_if nightMode="true" color="#dddddd"/>
+			</case>
+			<case additional="us_maps_road_symbol_name=road_not_maintained_for_passenger_car" color="#ffffff">
+				<apply_if maxzoom="11" pathEffect__2="5_2"/>
+				<apply_if minzoom="12" maxzoom="12" pathEffect__2="7_3"/>
+				<apply_if minzoom="13" maxzoom="13" pathEffect__2="10_4"/>
+				<apply_if minzoom="14" maxzoom="17" pathEffect__2="12_5"/>
+				<apply_if minzoom="18" pathEffect__2="16_7"/>
+				<apply_if nightMode="true" color="#bbbbbb" color__2="#ffffff"/>
+			</case>
+			<apply_if maxzoom="11" strokeWidth="1.5" strokeWidth__2="3"/>
+			<apply_if minzoom="12" maxzoom="12" strokeWidth="2" strokeWidth__2="4"/>
+			<apply_if minzoom="13" maxzoom="13" strokeWidth="4" strokeWidth__2="6"/>
+			<apply_if minzoom="14" maxzoom="17" strokeWidth="5" strokeWidth__2="7"/>
+			<apply_if minzoom="18" strokeWidth="7" strokeWidth__2="9"/>
+			<apply>
+				<switch>
+					<case additional="us_maps_road_accessibility_status=no_access"/>
+					<case additional="us_maps_road_accessibility_status=admin"/>
+					<apply color="#DEDEDE" color__2="#DEDEDE" color_2="#C2A3A3" strokeWidth__2="0"/>
+					<apply_if nightMode="true" color="#666666" color_2="#A07070"/>
+					<apply_if minzoom="14" maxzoom="17" strokeWidth_2="5" pathEffect_2="1_4"/>
+					<apply_if minzoom="18" strokeWidth_2="7" pathEffect_2="2_6"/>
+				</switch>
+			</apply>
+		</switch>
+		<switch>
+			<switch minzoom="11" tag="us_maps" value="road" additional="blm=yes" cap="BUTT">
+				<case additional="us_maps_road_asset_class=road"/>
+				<case additional="us_maps_road_asset_class=primitive_road">
+					<apply_if maxzoom="11" pathEffect="4_3"/>
+					<apply_if minzoom="12" strokeWidth="2" pathEffect="5_4"/>
+				</case>
+				<apply_if additional="us_maps_blm_file_name=public_motorized_roads" color="$blm_public_motorized_roads_color"/>
+				<apply_if additional="us_maps_blm_file_name=limited_public_motorized_roads" color="$blm_limited_public_motorized_roads"/>
+			</switch>
+			<switch minzoom="11" tag="us_maps" value="trail" additional="blm=yes" cap="BUTT">
+				<case additional="us_maps_blm_file_name=public_motorized_trails" color="$blm_public_motorized_trails"/>
+				<case additional="us_maps_blm_file_name=limited_public_motorized_trails" color="$blm_limited_public_motorized_trails"/>
+				<case additional="us_maps_blm_file_name=public_nonmotorized_trails" color="$blm_public_nonmotorized_trails"/>
+				<case additional="us_maps_blm_file_name=public_nonmechanized_trails" color="$blm_public_nonmechanized_trails"/>
+				<case additional="us_maps_blm_file_name=public_not_assessed_trails" color="$blm_public_not_assessed_trails"/>
+				<apply_if maxzoom="11" pathEffect="2_2"/>
+				<apply_if minzoom="12" strokeWidth="2" pathEffect="2_2"/>
+			</switch>
+			<apply color__1="#ffffff">
+				<apply_if nightMode="true" color__1="#777777"/>
+			</apply>
+			<apply_if maxzoom="11" strokeWidth="1.8" strokeWidth__1="2"/>
+			<apply_if minzoom="12" strokeWidth="2" strokeWidth__1="2.3"/>
+
+
+		</switch>
+		<switch>
+			<switch minzoom="11" tag="us_maps" value="road" additional="nps=yes" cap="BUTT">
+				<switch>
+					<case additional="us_maps_road_functional_class=arterial"/>
+					<case additional="us_maps_road_functional_class=collector"/>
+					<apply_if maxzoom="11" strokeWidth="1.4" strokeWidth__1="4"/>
+					<apply_if minzoom="12" maxzoom="14" strokeWidth="2" strokeWidth__1="7"/>
+					<apply_if minzoom="15" strokeWidth="3" strokeWidth__1="8"/>
+				</switch>
+				<switch>
+					<case additional="us_maps_road_functional_class=local_important"/>
+					<case additional="us_maps_road_functional_class=local"/>
+					<apply_if maxzoom="11" strokeWidth="0.7" strokeWidth__1="3"/>
+					<apply_if minzoom="12" maxzoom="14" strokeWidth="1.3" strokeWidth__1="5"/>
+					<apply_if minzoom="15" strokeWidth="2" strokeWidth__1="7"/>
+				</switch>
+			</switch>
+			<apply color__1="#ffffff" color="#000000">
+				<apply_if nightMode="true" color__1="#aaaaaa" color="#333333"/>
+			</apply>
+		</switch>
+
+	</line>
+</renderingStyle>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="32" height="32" viewBox="0 0 32 32">
+<defs>
+<filter id="filter-remove-color" x="0%" y="0%" width="100%" height="100%">
+<feColorMatrix color-interpolation-filters="sRGB" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0" />
+</filter>
+<mask id="mask-0">
+<g filter="url(#filter-remove-color)">
+<rect x="-3.2" y="-3.2" width="38.4" height="38.4" fill="rgb(0%, 0%, 0%)" fill-opacity="0.426087"/>
+</g>
+</mask>
+<clipPath id="clip-0">
+<rect x="0" y="0" width="32" height="32"/>
+</clipPath>
+<g id="source-6" clip-path="url(#clip-0)">
+<path fill-rule="nonzero" fill="rgb(55.294118%, 55.294118%, 55.294118%)" fill-opacity="1" d="M 13.480469 8.765625 C 13.085938 8.765625 12.707031 8.921875 12.425781 9.203125 C 12.148438 9.480469 11.988281 9.863281 11.988281 10.257812 L 11.988281 26.429688 C 11.636719 26.480469 11.3125 26.660156 11.078125 26.929688 C 10.847656 27.199219 10.71875 27.546875 10.71875 27.902344 L 10.71875 29.207031 C 10.71875 29.605469 10.875 29.984375 11.152344 30.261719 C 11.433594 30.542969 11.8125 30.699219 12.207031 30.699219 L 19.0625 30.699219 C 19.460938 30.699219 19.839844 30.542969 20.117188 30.261719 C 20.398438 29.984375 20.554688 29.605469 20.554688 29.207031 L 20.554688 27.902344 C 20.554688 27.539062 20.421875 27.1875 20.175781 26.914062 C 19.933594 26.640625 19.601562 26.46875 19.238281 26.425781 L 19.238281 10.257812 C 19.238281 9.863281 19.082031 9.480469 18.800781 9.203125 C 18.519531 8.921875 18.140625 8.765625 17.746094 8.765625 Z M 13.480469 8.765625 "/>
+</g>
+<mask id="mask-1">
+<g filter="url(#filter-remove-color)">
+<rect x="-3.2" y="-3.2" width="38.4" height="38.4" fill="rgb(0%, 0%, 0%)" fill-opacity="0.788"/>
+</g>
+</mask>
+<clipPath id="clip-1">
+<rect x="0" y="0" width="32" height="32"/>
+</clipPath>
+<g id="source-10" clip-path="url(#clip-1)">
+<path fill-rule="nonzero" fill="rgb(90.980392%, 0%, 0%)" fill-opacity="1" d="M 17.734375 10.234375 L 13.46875 10.234375 L 13.46875 28.449219 L 17.734375 28.449219 Z M 17.734375 10.234375 "/>
+</g>
+</defs>
+<g mask="url(#mask-0)">
+<use xlink:href="#source-6"/>
+</g>
+<g mask="url(#mask-1)">
+<use xlink:href="#source-10"/>
+</g>
+<path fill-rule="nonzero" fill="rgb(99.607843%, 99.607843%, 99.607843%)" fill-opacity="1" d="M 17.734375 10.234375 L 15.675781 10.234375 L 15.675781 28.449219 L 17.734375 28.449219 Z M 17.734375 10.234375 "/>
+<path fill="none" stroke-width="25" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(0%, 0%, 0%)" stroke-opacity="1" stroke-miterlimit="4" d="M 221.040039 516.5625 L 345.366211 516.5625 " transform="matrix(0.0551724, 0, 0, 0.0551724, 0, 0)"/>
+</svg>

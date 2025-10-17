@@ -1,0 +1,9 @@
+<svg width="32" height="32" fill="none" version="1.1" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+ <g fill="#debfc9">
+  <path d="m30.421-0.022461h1.6011v1.6011l-30.421 30.421h-1.6011v-1.6011" fill-opacity=".79"/>
+  <path d="m1.6011-0.022461-1.6011 1.6011v-1.6011" fill-opacity=".79" style="font-variant-east_asian:normal"/>
+  <path d="m30.421 32h1.6011v-1.6011" fill-opacity=".79" style="font-variant-east_asian:normal"/>
+ </g>
+ <path d="m0 16 16-16" stroke="#b7b7b7" stroke-linecap="square"/>
+ <path d="m16 32 16-16" stroke="#b7b7b7" stroke-linecap="square"/>
+</svg>

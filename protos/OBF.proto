@@ -35,6 +35,9 @@ message OsmAndStructure {
 	// encoded as fixed32 length delimited
 	repeated OsmAndRoutingIndex routingIndex = 9;
 
+	// encoded as fixed32 length delimited
+	repeated OsmAndHHRoutingIndex hhRoutingIndex = 10;
+
 	// last field should version again (to check consistency)
 	required uint32 versionConfirm = 32;
 }
@@ -183,6 +186,7 @@ message OsmAndAddressIndex {
 			CitiesOrTowns = 1;
 			Postcodes = 2;
 			Villages = 3;
+			// BoundaryType = 0; // added as 0 to not cause crashes < 5.2
 		}
 		required CitiesType type = 2;
 
@@ -232,7 +236,9 @@ message AddressNameIndexDataAtom {
 
 message CityIndex {
 	// should be written the first (for city), for postcode is optional
-	optional uint32 city_type = 1; // 0-5 enum CityType
+	// 0. City, 1. Town, 2. Village, 3. Hamlet, 4. Suburb, 5. Boundary (5.2) 6. Postcode (5.3)...
+	optional uint32 city_type = 1; // 0-7... enum CityType
+
 	
 	required string name = 2;
 	optional string name_en = 3;
@@ -246,6 +252,10 @@ message CityIndex {
 	
 	// shift from start CityIndex (without length) to cityBlockIndex
 	optional fixed32 shiftToCityBlockIndex = 10;
+
+	// array of bytes int32
+	// 5.2: 4 first uints is bbox -  of x31-left, y31-top, x31-right, y31-bottom
+	optional bytes boundary = 12;
 }
 
 message CityBlockIndex {
@@ -254,20 +264,13 @@ message CityBlockIndex {
 	optional fixed32 shiftToCityIndex = 4;
 	
 	// city boundary
-	//optional CityBoundaryIndex = 6;
+	//optional CityBoundaryIndex = 6; // deprecated
 
 	// buildings that doesn't belong to the street
 	repeated BuildingIndex buildings = 10;
 	
 	repeated StreetIndex streets = 12;
 }
-
-//message CityBoundaryIndex {
-	// 1 way is encoded as bytes (raw array of x, y delta-encoded as uint32)
-//	repeated bytes outerWays;
-	
-//	repeated bytes innerWays;
-//}
 
 message StreetIndex {
 	required string name = 1;
@@ -563,6 +566,17 @@ message OsmAndPoiSubtype {
 	repeated string subtypeValue = 8; 
 }
 
+message OsmAndPoiTagGroup {
+	required uint32 id = 1;
+	repeated string tagValues = 5; // array of [tag1, value1, tag2, value2, ...]
+}
+
+message OsmAndPoiTagGroups {
+
+	repeated uint32 ids = 2 [packed=true]; // to load indexes in memory at base search and later groups could be loaded
+	repeated OsmAndPoiTagGroup groups = 5;
+}
+
 
 
 message OsmAndPoiBox {
@@ -572,6 +586,10 @@ message OsmAndPoiBox {
 	required sint32 top = 3; // delta encoded (zoom)
 	
 	optional OsmAndPoiCategories categories = 4;
+
+	// encoded as fixed32 length delimited
+	// could be used for address data to store generic tag group at top most POI box)
+	optional OsmAndPoiTagGroups tagGroups = 8;
 	
 	// encoded as fixed32 length delimited
 	repeated OsmAndPoiBox subBoxes = 10;
@@ -606,7 +624,7 @@ message OsmAndPoiBoxDataAtom {
   optional string name = 6;
   optional string nameEn = 7;
   optional uint64 id = 8;  
-
+  
   // deprecated from v1.7
   optional string openingHours = 10;
   optional string site = 11;
@@ -616,6 +634,7 @@ message OsmAndPoiBoxDataAtom {
   repeated uint32 textCategories = 14; // v1.7
   repeated string textValues = 15;
   optional int32 precisionXY = 16; // precision in 1-xy-xy-xy binary format
+  repeated uint32 tagGroups = 17 [packed=true];
 }
 
 /**
@@ -702,6 +721,59 @@ message OsmAndRoutingIndex {
 		repeated RestrictionData restrictions = 7;
 		optional StringTable stringTable = 8;
 
+	}
+}
+
+// HH Routing index need to be consistent with global file and include fully referenced clusters
+message OsmAndHHRoutingIndex {
+	required int64 edition = 1; // usually timestamp creation checks consistency
+	required string profile = 2; // main profile car, pedestrian ... 
+	repeated string profileParams = 3; // later encoded as profileIds in points / segments
+	optional StringTable tagValuesTable = 4;
+
+	required HHRoutePointsBox pointBoxes = 5;
+	repeated HHRouteBlockSegments pointSegments = 6;
+
+	message HHRoutePointsBox {
+		// for root box is absolute coordinates same as RouteDataBox
+		required sint32 left = 2; // delta encoded
+		required sint32 right = 3; // delta encoded
+		required sint32 top = 4; // delta encoded
+		required sint32 bottom = 5; // delta encoded
+
+		repeated HHRoutePointsBox boxes = 6;
+		repeated HHRouteNetworkPoint points = 7;
+	}
+
+	message HHRouteNetworkPoint {
+		required int32 id = 1; // id in file to reference shortcuts
+		required sint32 dx = 2; // delta encoded to HHRoutePointsBox (start point 31 coordinates)
+  		required sint32 dy = 3; // delta encoded to HHRoutePointsBox (start point 31 coordinates)
+		required int32 globalId = 4;
+		required int64 roadId = 5;
+		required int32 roadStartEndIndex = 6; // (startIndex << 1) + (endIndex > startIndex ? 1 : 0)
+		optional int32 clusterId = 7;
+		optional int32 dualPointId = 8;
+		optional int32 dualClusterId = 9;
+		repeated int32 profileIds = 10; // applied to specific profiles (if empty then applied to all profiles)
+		optional int32 partialInd = 11; // partialInd > 0, means that it's a partially written node without clusters
+		repeated int32 tagValueIds = 12 [packed=true];
+	}
+
+	message HHRouteBlockSegments {
+		required int32 idRangeStart = 1; // range of point ids stored in block
+		required int32 idRangeLength = 2; // blocks are sorted by ids 
+		optional int32 profileId = 3; // profileParams specific segments (required on top level)
+
+
+		repeated HHRouteBlockSegments innerBlocks = 6; // potentially array to shifts could be used to speedup 
+		repeated HHRoutePointSegments pointSegments = 4;
+	}
+
+	message HHRoutePointSegments {
+		// required int32 pointId = 1;
+		required bytes segmentsIn = 2; // segments times encoded according to cluster in
+		required bytes segmentsOut = 3; // segments times encoded according to cluster out
 	}
 
 }
